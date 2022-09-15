@@ -13,7 +13,7 @@ name = input("Enter username: ")
 def receive():
     while True:
         try:
-            message, _ = client.recvfrom(1024)
+            message, _ = client.recvfrom(1024) 
             print(message.decode())
         except:
             pass

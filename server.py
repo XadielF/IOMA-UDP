@@ -1,10 +1,16 @@
+from cryptography.fernet import Fernet
 import socket
 import threading
 import queue
 
-
 messages = queue.Queue()
 clients = []
+
+#generating a key for encryption
+key =  Fernet.generate_key()
+
+#Instance the Fernet class with the key
+fernet = Fernet(key)
 
 #Creating UDP Socket
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -22,7 +28,12 @@ def broadcast():
     while True:
         while not messages.empty():
             message, addr = messages.get()
-            print(message.decode())
+            #PRINT WITHOUT ENCRYPTION
+            #print(message.decode())
+
+            #PRINT WITH ENCRYPTION
+            print(fernet.encrypt(message).decode())
+            
             if addr not in clients:
                 clients.append(addr)
             for client in clients:

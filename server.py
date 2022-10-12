@@ -6,15 +6,16 @@ import queue
 messages = queue.Queue()
 clients = []
 
-#generating a key for encryption
-key =  Fernet.generate_key()
+# generating a key for encryption
+key = Fernet.generate_key()
 
-#Instance the Fernet class with the key
+# Instance the Fernet class with the key
 fernet = Fernet(key)
 
-#Creating UDP Socket
+# Creating UDP Socket
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-server.bind(("192.168.0.4", 40000))
+server.bind(( "198.245.101.157", 40000))
+
 
 def receive():
     while True:
@@ -23,6 +24,7 @@ def receive():
             messages.put((message, addr))
         except:
             pass
+
 
 def broadcast():
     while True:
@@ -33,13 +35,13 @@ def broadcast():
 
             #PRINT WITH ENCRYPTION
             print(fernet.encrypt(message).decode())
-            
+
             if addr not in clients:
                 clients.append(addr)
             for client in clients:
                 try:
                     if message.decode().startswith("SIGNUP_TAG:"):
-                        name = message.decode()[message.decode().index(":")+1:]
+                        name = message.decode()[message.decode().index(":") + 1:]
                         server.sendto(f"{name} joined the server!".encode(), client)
                     else:
                         server.sendto(message, client)
